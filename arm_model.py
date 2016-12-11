@@ -1,8 +1,8 @@
 #!/usr/bin/env python2
 
-from sympy import *
+# from sympy import *
 import numpy as np
-# from math import *
+from math import *
 from circ2_intersect import *
 
 """
@@ -25,6 +25,8 @@ y axis
 |
 |
 |--------> x axis (and theta == 0)
+
+note: end effector x value is usually (always?) negative
 """
 
 
@@ -75,9 +77,10 @@ def inverse_2d(p4):
     p1 = max(circ2_intersect(p3, L2, p0, L5), key=lambda p: p[0])
     theta1 = atan2(p1[1] - p0[1], p1[0] - p0[0])
 
-    return float(theta0), float(theta1)
+    return np.array([theta0, theta1])
 
 
 if __name__ == '__main__':
-    x = inverse_2d(p4 = np.array([-0.15, 0.03]))
-    print(x)
+    for i in range(60):
+        x = inverse_2d(p4 = np.array([-0.15, 0.03]))
+        print(x)
