@@ -22,30 +22,33 @@ time.sleep(1)
 MAGIC = 200
 msg = [MAGIC, 80, 110, 100]
 
-while True:
-    print(msg[1:])
-    encoded_msg = [chr(c) for c in msg]
-    arduino.write(encoded_msg)
-    # time.sleep(0.01)
-    # reply = arduino.readline()
-    # if len(reply):
-    #     print(reply)
-    time.sleep(2)
-
-
-
+lastCmdTime = time.time()
+CMD_FREQ = 20 # Hz
 
 
 spnav_open()
 
+t, r = None, None
+
 while True:
     event = spnav_poll_event()
     if event and isinstance(event, SpnavMotionEvent):
-        # print(event.translation[2]) # forward
-        event.translation[1] # down
-        vals = [
-            event.rotation[1],
-            event.translation[0],
-        ]
+        t, r = event.translation, event.rotation
 
-        print(vals)
+    now = time.time()
+    dt = now - lastCmdTime
+    if dt > 1.0 / CMD_FREQ and t and r:
+        state = [80, 110, 100]
+
+        state[0] = int((-r[1] / 350.0 * 90) + 90)
+
+        state[1] = int((t[2] / 350.0 * 90) + 110)
+
+        state[2] = int((t[1] / 350.0 * 90) + 100)
+
+        encoded_msg = [chr(c) for c in [MAGIC] + state]
+        arduino.write(encoded_msg)
+
+        lastCmdTime = now
+        print(state)
+

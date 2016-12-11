@@ -94,7 +94,7 @@ void loop() {
             serialMsg[msgIndex++] = c;
             if (msgIndex == 3) {
                 haveMessage = true;
-                Serial.println("got message!");
+                // Serial.println("got message!");
                 // Serial.println(0);
 
                 arm.setState({serialMsg[0], serialMsg[1], serialMsg[2]});
