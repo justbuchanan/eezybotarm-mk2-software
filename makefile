@@ -1,3 +1,5 @@
+# note: requires installing arduino-makefile
+#  $ pacaur -S `arduino-mk` on arch linux
 ARDUINO_DIR=/usr/share/arduino
 ARDMK_DIR=/usr/share/arduino
 AVR_TOOLS_DIR=/usr

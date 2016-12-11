@@ -68,6 +68,8 @@ void setup() {
     arm.printState();
 
     Serial.begin(9600);
+
+    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 //==============================================================================
@@ -75,42 +77,34 @@ void setup() {
 
 // a number not in the range of servo values that indicates the start of a message
 const uint8_t MAGIC = 200;
-// Format: '<1><2><3>' where 1, 2, 3 are joint deltas as 8 bit numbers
+// Format: '<1><2><3>' where 1, 2, 3 are joint servo values as 8 bit numbers
 uint8_t serialMsg[3];
 size_t msgIndex = 0;
 bool haveMessage = false;
 
 void loop() {
-    while (Serial.available() > 0) {
-        uint8_t c = Serial.read() - 'a';
+    if (Serial.available() > 0) {
+        uint8_t c = Serial.read();
         if (c == MAGIC) {
             msgIndex = 0;
-        } else if (msgIndex >= 2) {
+        } else if (msgIndex >= 3) {
             // invalid
             haveMessage = false;
         } else {
             serialMsg[msgIndex++] = c;
             if (msgIndex == 3) {
                 haveMessage = true;
-                // Serial.println("Got message: %u:%u:%u", serialMsg[0], serialMsg[1], serialMsg[2]);
                 Serial.println("got message!");
-                Serial.println(0);
+                // Serial.println(0);
+
+                arm.setState({serialMsg[0], serialMsg[1], serialMsg[2]});
             }
         }
+        // Serial.print("msgIndex: ");
+        // Serial.println(msgIndex);
         // Serial.println(c);
-        Serial.println(c);
     }
 
-
-    // arm.setState({100, 100, 100});
-//  for (pos = min; pos <= max; pos += 1) { // goes from 0 degrees to 180 degrees
-//    // in steps of 1 degree
-//    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-//    delay(d);                       // waits 15ms for the servo to reach the position
-//  }
-//  for (pos = max; pos >= min; pos -= 1) { // goes from 180 degrees to 0 degrees
-//    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-//    delay(d);                       // waits 15ms for the servo to reach the position
-//  }
+    digitalWrite(LED_BUILTIN, haveMessage ? HIGH : LOW);
 }
 

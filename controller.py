@@ -17,19 +17,19 @@ signal.signal(signal.SIGINT, on_signal)
 port = sys.argv[1]
 
 arduino = serial.Serial(port, 9600, timeout=1)
+time.sleep(1)
+
 MAGIC = 200
+msg = [MAGIC, 80, 110, 100]
 
 while True:
-    # msg = 'h'
-    msg = bytes([MAGIC, 100, 100, 100])
-    print(msg)
-    # arduino.write(msg)
-    for b in msg:
-        arduino.write(b)
-    time.sleep(0.01)
-    reply = arduino.readline()
-    if len(reply):
-        print(reply)
+    print(msg[1:])
+    encoded_msg = [chr(c) for c in msg]
+    arduino.write(encoded_msg)
+    # time.sleep(0.01)
+    # reply = arduino.readline()
+    # if len(reply):
+    #     print(reply)
     time.sleep(2)
 
 
