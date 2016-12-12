@@ -58,11 +58,7 @@ if __name__ == '__main__':
     # plot_path(path)
     # exit() 
 
-    import serial
-    port = '/dev/arduino'
-    arduino = serial.Serial(port, 9600, timeout=1)
-    time.sleep(1)
-    MAGIC = 200
+    arm = Arm()
 
     state = [0,0,0]
     while True:
@@ -80,8 +76,7 @@ if __name__ == '__main__':
             state = clip_servos(state)
             state = [int(s) for s in state]
 
-            encoded_msg = [chr(c) for c in [MAGIC] + state]
-            arduino.write(encoded_msg)
-
+            arm.set_servo_values(state)
             time.sleep(0.001)
+
         path.reverse()

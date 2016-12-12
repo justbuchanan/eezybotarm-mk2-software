@@ -22,19 +22,6 @@ def on_signal(signum, frame):
 signal.signal(signal.SIGINT, on_signal)
 
 
-port = sys.argv[1]
-
-arduino = serial.Serial(port, 9600, timeout=1)
-time.sleep(1)
-
-
-lastCmdTime = time.time()
-CMD_FREQ = 20 # Hz
-
-
-spnav_open()
-
-
 def latest_event():
     event = None
     while True:
@@ -44,6 +31,14 @@ def latest_event():
         else:
             break
     return event
+
+port = sys.argv[1]
+arm = Arm(port, 9600)
+
+lastCmdTime = time.time()
+CMD_FREQ = 20 # Hz
+
+spnav_open()
 
 
 t, r = None, None
@@ -81,9 +76,7 @@ while True:
 
         state = clip_servos(state)
         state = [int(s) for s in state]
-
-        encoded_msg = [chr(c) for c in [MAGIC] + state]
-        arduino.write(encoded_msg)
+        arm.set_servo_values(state)
 
         lastCmdTime = now
         print("cmd: ", end='')
