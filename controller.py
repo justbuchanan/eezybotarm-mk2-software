@@ -71,7 +71,7 @@ while True:
         if t and r:
             state[0] = calc_base_servo_cmd(-r[1] / 350.0 * pi/4)
             state[1] -= t[2] / 350.0 * 90
-            state[1] += t[1] / 350.0 * 90
+            state[2] += t[1] / 350.0 * 90
 
             grip_pos[0] -= t[2] / 350.0 * .1
             grip_pos[1] += t[1] / 350.0 * .1

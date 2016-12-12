@@ -27,7 +27,7 @@ def path_from_waypoints(waypoints, steps_per_m=5000):
             continue
         direc = delta / dist
 
-        stepcount = np.matmul(abs(delta), np.array([0.1, 1.0, 1.5]) * steps_per_m)
+        stepcount = np.matmul(abs(delta), np.array([0.3, 1.0, 1.5]) * steps_per_m)
         # print('stepcount: %d' % stepcount)
         dist_vals = np.linspace(0, dist, num=stepcount)
 
@@ -94,20 +94,20 @@ def endpoint_state_to_servos(p):
 
 
 def run_waypoints(arm, waypoints, speed):
-    # dt = 1.0 / 60
-    dt = 1.0 / 10
+    dt = 1.0 / 60
+    # dt = 1.0 / 10
     steps_per_m = 1 / (speed * dt)
     path = path_from_waypoints(waypoints, steps_per_m)
 
-    plot_path(path + list(reversed(path)))
-    sys.exit()
+    # plot_path(path + list(reversed(path)))
+    # sys.exit()
     # return
 
     while True:
         for p in path:
             state = endpoint_state_to_servos(p)
             arm.set_servo_values(state)
-            # print(state)
+            print(state)
 
             time.sleep(dt)
 
@@ -116,21 +116,22 @@ def run_waypoints(arm, waypoints, speed):
 if __name__ == '__main__':
     waypoints = [
         # np.array([pi/4, -0.15, -0.02]),
-        np.array([pi/4, -0.12, 0.0]),
-        np.array([-pi/4, -0.12, 0.0]),
-        # np.array([-pi/4, -0.12, 0.0]),
-        np.array([0, -0.12, 0.0]),
-        np.array([0, -0.15, 0.01]),
-        np.array([0, -0.15, -0.02]),
+        np.array([pi/6, -0.08, -0.01]),
+        np.array([-pi/6, -0.15, 0.0]),
+        np.array([pi/6, -0.2, 0.10]),
+        np.array([-pi/6, -0.12, 0.0]),
+        # np.array([0, -0.15, 0.01]),
+        # np.array([0, -0.15, -0.02]),
         # np.array([0, -0.06, 0.1]),
     ]
 
     arm = Arm()
-    speed = 0.04
+    speed = 0.09
     # speed = 0.1
 
-    # plot_path(path_from_waypoints())
+    # plot_path(path_from_waypoints(waypoints) + path_from_waypoints(list(reversed(waypoints))) + path_from_waypoints(waypoints))
+    # sys.exit()
 
-    # while True:
-    run_waypoints(arm, waypoints, speed)
-    run_waypoints(arm, list(reversed(waypoints)), speed)
+    while True:
+        run_waypoints(arm, waypoints, speed)
+        run_waypoints(arm, [waypoints[:-1]] + list(reversed(waypoints)), speed)
