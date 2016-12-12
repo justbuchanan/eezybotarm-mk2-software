@@ -50,16 +50,16 @@ L4 = 147 * mm
 L5 = 62 * mm
 
 # calculate the end-effector position (p4) from the angles of the two arm servos
-def forward(theta0, theta1):
+def forward(thetas):
     p0 = np.array([0, 0])
-    p1 = p0 + vec_dir(theta1) * L5
-    p2 = p0 + L1 * vec_dir(theta0)
+    p1 = p0 + vec_dir(thetas[1]) * L5
+    p2 = p0 + L1 * vec_dir(thetas[0])
     i = circ2_intersect(p1, L2, p2, L3)
     p3 = max(i, key=lambda p: p[0]) # right-most circle-circle intersection
     p3 = np.array(p3)
     d = p2 - p3
     p4 = d * L4 + p2
-    return p4
+    return [p0, p1, p2, p3, p4]
 
 
 # given the position of the end-effector, return the angles of the two arm servos
