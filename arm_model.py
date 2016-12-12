@@ -29,12 +29,14 @@ y axis
 note: end effector x value is usually (always?) negative
 """
 
+def norm(v):
+    # nrm = np.linalg.norm(v)
+    return sqrt(v[0]**2 + v[1]**2)
 
 # returns a unit vector in the direction of the given angle
 def vec_dir(theta):
     v = np.array([cos(theta), sin(theta)])
-    nrm = sqrt(v[0]**2 + v[1]**2)
-    # nrm = np.linalg.norm(v)
+    nrm = norm(v)
     return v / nrm
 
 # units are in m
@@ -58,7 +60,7 @@ def forward(thetas):
     p3 = max(i, key=lambda p: p[0]) # right-most circle-circle intersection
     p3 = np.array(p3)
     d = p2 - p3
-    p4 = d * L4 + p2
+    p4 = d / norm(d) * (L4) + p2
     return [p0, p1, p2, p3, p4]
 
 
