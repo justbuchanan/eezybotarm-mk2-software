@@ -77,27 +77,18 @@ while True:
         grip_pos = np.array([-0.1, 0.05])
 
         if t and r:
-            state[0] = int((-r[1] / 350.0 * 90) + 55)
-            state[1] = int((t[2] / 350.0 * 90) + 110)
-            state[2] = int((t[1] / 350.0 * 90) + 100)
+            state[0] = int((-r[1] / 350.0 * 90) + 70)
 
             grip_pos[0] -= t[2] / 350.0 * .1
             grip_pos[1] += t[1] / 350.0 * .1
-
             print("gripper: %s" % str(grip_pos))
 
         # angle_ranges = [(-pi/2, pi/2), ]
 
         thetas = arm_model.inverse_2d(grip_pos)
-        print('thetas: %s' % str(thetas))
         arm_cmds = calc_arm_servos(thetas)
-        print('cmds: %s' % str(arm_cmds))
 
-        state[1] = arm_cmds[0]
-        state[2] = arm_cmds[1]
-        # state1[1] = arm_cmds
-
-        # state = [80, 150, 180]
+        state[1:3] = arm_cmds
 
         state = [clip(s, 0, 180) for s in state]
         state = [int(s) for s in state]

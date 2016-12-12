@@ -6,34 +6,42 @@ import arm_model
 
 # note: this completely ignores the rotational servo in the base
 
-cmd1 = np.array([110, 100])
-Y1 = np.array([-.108, 0])
+cmd1 = np.array([110.0, 100.0])
+Y0 = np.array([-.108, 0])
 
-cmd2 = np.array([150, 180])
-Y2 = np.array([-.21, -0.01])
+cmd2 = np.array([150.0, 180.0])
+Y1 = np.array([-.21, -0.01])
 
 # each X is an array of two theta values
+state0 = arm_model.inverse_2d(Y0)
 state1 = arm_model.inverse_2d(Y1)
-state2 = arm_model.inverse_2d(Y2)
 
-# state2cmd = 
 
-# servo1 of 110 corresponds to theta1 of state1[0]
-# servo2 of 100 corresponds to theta2 of state1[1]
-
+# servo1 of 110 corresponds to theta1 of state0[0]
+# servo2 of 100 corresponds to theta2 of state0[1]
 
 # calculate servo values from angle values
 def calc_arm_servos(thetas):
-    if False:
-        m = (cmd1 - state1) / (cmd2 - state2)
+    m = (cmd2 - cmd1) / (state1 - state0)
 
-        cmd = cmd1 + m * (thetas - state1)
-        return cmd
-    else:
-        m0 = (cmd1[0] - state1[0]) / (cmd2[0] - state2[0])
-        cmd_0 = cmd1[0] + m0 * (thetas[0] - state1[0])
+    cmd = cmd1 + m * (thetas - state0)
+    return cmd
 
-        m1 = (cmd1[1] - state1[1]) / (cmd2[1] - state2[1])
-        cmd_1 = cmd1[1] + m1 * (thetas[0] - state1[1])
-        return [cmd_0, cmd_1]
 
+def draw_calibration_curve():
+    import matplotlib.pyplot as plt
+    plt.ylabel('Servo cmd')
+    plt.xlabel('Angle')
+    t0 = np.linspace(0, 2*pi, num=20)
+    t1 = np.linspace(0, 2*pi, num=20)
+    plt.plot(t0, [calc_arm_servos([t, 0])[0] for t in t0], color='b', label='Servo 1')
+    plt.plot(t1, [calc_arm_servos([0, t])[1] for t in t1], color='g', label='Servo 2')
+    plt.legend()
+    plt.title('Arm angle -> servo mapping')
+    # plt.plot(t1)
+    plt.show()
+
+if __name__ == '__main__':
+    print('state0: %s' % str(state0))
+    print('state1: %s' % str(state1))
+    draw_calibration_curve()

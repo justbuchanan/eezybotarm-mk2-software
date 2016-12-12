@@ -18,7 +18,6 @@ pts = arm_model.forward(X)
 # circles for each of the points
 circles = [plt.Circle(p, radius=0.005) for p in pts]
 for c in circles:
-    print(c)
     plt.gca().add_patch(c)
 
 linemap = [
