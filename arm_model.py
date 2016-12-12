@@ -30,8 +30,8 @@ note: end effector x value is usually (always?) negative
 """
 
 def norm(v):
-    # nrm = np.linalg.norm(v)
-    return sqrt(v[0]**2 + v[1]**2)
+    return np.linalg.norm(v)
+    # return sqrt(v[0]**2 + v[1]**2)
 
 # returns a unit vector in the direction of the given angle
 def vec_dir(theta):

@@ -31,6 +31,7 @@ def calc_base_servo_cmd(theta):
 # calculate servo values from angle values
 def calc_arm_servos(thetas):
     m = (cmd2 - cmd1) / (state1 - state0)
+    print(m)
 
     cmd = cmd1 + m * (thetas - state0)
     return cmd

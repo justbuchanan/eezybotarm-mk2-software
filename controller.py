@@ -13,6 +13,13 @@ import numpy as np
 from calibration import *
 from arm_driver import *
 
+import argparse
+parser = argparse.ArgumentParser('Control eezybotarm mk2 with a spacenav mouse')
+parser.add_argument('--dumb', action='store_true', help='dumb controls')
+parser.add_argument('device_path', type=str, default='/dev/arduino')
+args = parser.parse_args()
+
+
 
 # exit gracefully
 def on_signal(signum, frame):
@@ -32,8 +39,7 @@ def latest_event():
             break
     return event
 
-port = sys.argv[1]
-arm = Arm(port, 9600)
+arm = Arm(args.device_path, 9600)
 
 lastCmdTime = time.time()
 CMD_FREQ = 20 # Hz
@@ -64,15 +70,18 @@ while True:
 
         if t and r:
             state[0] = calc_base_servo_cmd(-r[1] / 350.0 * pi/4)
+            state[1] -= t[2] / 350.0 * 90
+            state[1] += t[1] / 350.0 * 90
 
             grip_pos[0] -= t[2] / 350.0 * .1
             grip_pos[1] += t[1] / 350.0 * .1
 
         print("gripper: %s" % str(grip_pos))
 
-        thetas = arm_model.inverse_2d(grip_pos)
-        arm_cmds = calc_arm_servos(thetas)
-        state[1:3] = arm_cmds
+        if not args.dumb:
+            thetas = arm_model.inverse_2d(grip_pos)
+            arm_cmds = calc_arm_servos(thetas)
+            state[1:3] = arm_cmds
 
         state = clip_servos(state)
         state = [int(s) for s in state]
