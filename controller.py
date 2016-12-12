@@ -40,6 +40,9 @@ def clip(x, minval, maxval):
     else:
         return x
 
+def clip_servos(servos):
+    return [clip(s, 0, 180) for s in servos]
+
 
 spnav_open()
 
@@ -68,29 +71,27 @@ while True:
         #         r[i] = 
 
     state = [80, 110, 100]
+    grip_pos = np.array([-0.1, 0.05])
 
 
+    # send commands at CMD_FREQ Hz
     now = time.time()
     dt = now - lastCmdTime
-    # send commands at CMD_FREQ Hz
     if dt > 1.0 / CMD_FREQ:
-        grip_pos = np.array([-0.1, 0.05])
 
         if t and r:
             state[0] = calc_base_servo_cmd(-r[1] / 350.0 * pi/4)
 
             grip_pos[0] -= t[2] / 350.0 * .1
             grip_pos[1] += t[1] / 350.0 * .1
-            print("gripper: %s" % str(grip_pos))
 
-        # angle_ranges = [(-pi/2, pi/2), ]
+        print("gripper: %s" % str(grip_pos))
 
         thetas = arm_model.inverse_2d(grip_pos)
         arm_cmds = calc_arm_servos(thetas)
-
         state[1:3] = arm_cmds
 
-        state = [clip(s, 0, 180) for s in state]
+        state = clip_servos(state)
         state = [int(s) for s in state]
 
         encoded_msg = [chr(c) for c in [MAGIC] + state]
