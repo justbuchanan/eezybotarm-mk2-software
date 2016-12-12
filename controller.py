@@ -11,6 +11,7 @@ import time
 import arm_model
 import numpy as np
 from calibration import *
+from arm_driver import *
 
 
 # exit gracefully
@@ -26,22 +27,9 @@ port = sys.argv[1]
 arduino = serial.Serial(port, 9600, timeout=1)
 time.sleep(1)
 
-MAGIC = 200
-msg = [MAGIC, 80, 110, 100]
 
 lastCmdTime = time.time()
 CMD_FREQ = 20 # Hz
-
-def clip(x, minval, maxval):
-    if x > maxval:
-        return maxval
-    elif x < minval:
-        return minval
-    else:
-        return x
-
-def clip_servos(servos):
-    return [clip(s, 0, 180) for s in servos]
 
 
 spnav_open()
