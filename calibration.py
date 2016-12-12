@@ -17,6 +17,14 @@ state0 = arm_model.inverse_2d(Y0)
 state1 = arm_model.inverse_2d(Y1)
 
 
+# TODO: unify this with the arm servo calibration
+def calc_base_servo_cmd(theta):
+    # 60 -> 0
+    # 155 -> pi/4
+
+    m = (155 - 60) / (pi/4 - 0)
+    return 60 + m * (theta - 0)
+
 # servo1 of 110 corresponds to theta1 of state0[0]
 # servo2 of 100 corresponds to theta2 of state0[1]
 

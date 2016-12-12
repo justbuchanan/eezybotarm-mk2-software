@@ -77,7 +77,7 @@ while True:
         grip_pos = np.array([-0.1, 0.05])
 
         if t and r:
-            state[0] = int((-r[1] / 350.0 * 90) + 70)
+            state[0] = calc_base_servo_cmd(-r[1] / 350.0 * pi/4)
 
             grip_pos[0] -= t[2] / 350.0 * .1
             grip_pos[1] += t[1] / 350.0 * .1
