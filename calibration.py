@@ -9,8 +9,8 @@ import arm_model
 cmd1 = np.array([110, 100])
 Y1 = np.array([-.108, 0])
 
-cmd2 = np.array([110, 180])
-Y2 = np.array([-.185, .08])
+cmd2 = np.array([150, 180])
+Y2 = np.array([-.21, -0.01])
 
 # each X is an array of two theta values
 state1 = arm_model.inverse_2d(Y1)
@@ -24,7 +24,16 @@ state2 = arm_model.inverse_2d(Y2)
 
 # calculate servo values from angle values
 def calc_arm_servos(thetas):
-    m = (cmd1 - state1) / (cmd2 - state2)
+    if False:
+        m = (cmd1 - state1) / (cmd2 - state2)
 
-    cmd = cmd1 + m * (thetas - state1)
-    return cmd
+        cmd = cmd1 + m * (thetas - state1)
+        return cmd
+    else:
+        m0 = (cmd1[0] - state1[0]) / (cmd2[0] - state2[0])
+        cmd_0 = cmd1[0] + m0 * (thetas[0] - state1[0])
+
+        m1 = (cmd1[1] - state1[1]) / (cmd2[1] - state2[1])
+        cmd_1 = cmd1[1] + m1 * (thetas[0] - state1[1])
+        return [cmd_0, cmd_1]
+

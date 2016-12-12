@@ -44,6 +44,8 @@ def circ2_intersect_github(p0, r0, p1, r1):
 def circ2_intersect(p0, r0, p1, r1):
     return circ2_intersect_github(p0, r0, p1, r1)
 
+
+def circ2_intersect_sympy(p0, r0, p1, r1):
     c1 = Circle(Point(p0[0], p0[1], evaluate=False), r0)
     c2 = Circle(Point(p1[0], p1[1], evaluate=False), r1)
     ss = intersection(c1, c2)

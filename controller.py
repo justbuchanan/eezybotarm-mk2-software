@@ -70,36 +70,41 @@ while True:
     state = [80, 110, 100]
 
 
-    # now = time.time()
-    # dt = now - lastCmdTime
+    now = time.time()
+    dt = now - lastCmdTime
     # send commands at CMD_FREQ Hz
-    # if dt > 1.0 / CMD_FREQ:
-    grip_pos = np.array([-0.1, 0.05])
+    if dt > 1.0 / CMD_FREQ:
+        grip_pos = np.array([-0.1, 0.05])
 
-    if t and r:
-        state[0] = int((-r[1] / 350.0 * 90) + 55)
-        state[1] = int((t[2] / 350.0 * 90) + 110)
-        state[2] = int((t[1] / 350.0 * 90) + 100)
+        if t and r:
+            state[0] = int((-r[1] / 350.0 * 90) + 55)
+            state[1] = int((t[2] / 350.0 * 90) + 110)
+            state[2] = int((t[1] / 350.0 * 90) + 100)
 
-        grip_pos[0] -= t[2] / 350.0 * .15
-        grip_pos[1] += t[1] / 350.0 * .15
+            grip_pos[0] -= t[2] / 350.0 * .1
+            grip_pos[1] += t[1] / 350.0 * .1
 
-        print("gripper: %s" % str(grip_pos))
+            print("gripper: %s" % str(grip_pos))
 
-    # angle_ranges = [(-pi/2, pi/2), ]
+        # angle_ranges = [(-pi/2, pi/2), ]
 
-    thetas = arm_model.inverse_2d(grip_pos)
-    arm_cmds = calc_arm_servos(thetas)
+        thetas = arm_model.inverse_2d(grip_pos)
+        print('thetas: %s' % str(thetas))
+        arm_cmds = calc_arm_servos(thetas)
+        print('cmds: %s' % str(arm_cmds))
 
-    state[1] = arm_cmds[0]
-    state[2] = arm_cmds[1]
+        state[1] = arm_cmds[0]
+        state[2] = arm_cmds[1]
+        # state1[1] = arm_cmds
 
-    state = [clip(s, 0, 180) for s in state]
-    state = [int(s) for s in state]
+        # state = [80, 150, 180]
 
-    encoded_msg = [chr(c) for c in [MAGIC] + state]
-    arduino.write(encoded_msg)
+        state = [clip(s, 0, 180) for s in state]
+        state = [int(s) for s in state]
 
-    # lastCmdTime = now
-    print("cmd: ", end='')
-    print(state)
+        encoded_msg = [chr(c) for c in [MAGIC] + state]
+        arduino.write(encoded_msg)
+
+        lastCmdTime = now
+        print("cmd: ", end='')
+        print(state)
