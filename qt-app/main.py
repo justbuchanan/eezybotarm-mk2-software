@@ -44,8 +44,16 @@ class ArmDriver(QObject):
         QObject.__init__(self, parent)
         self._command = ArmCommand(None, [100, 100, 100])
         self._port = '/dev/arduino'
-        self._arm = Arm(port=self.port)
-        self._connectified = self._arm != None
+        self._arm = None
+        self._connectified = False
+
+    def connect(self):
+        try:
+            self._arm = Arm(port=self.port)
+        except ConnectionError as e:
+            print("failed to connect to arduino")
+
+        self.connectified = self._arm != None
 
     connectified_changed = pyqtSignal(bool)
 
@@ -59,7 +67,7 @@ class ArmDriver(QObject):
     @command.setter
     def command(self, value):
         self._command = value
-        if value:
+        if value and self._arm:
             # print('sent cmd: %s' % value)
             self._arm.set_servo_values(value.servos)
 
