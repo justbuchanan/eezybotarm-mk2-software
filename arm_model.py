@@ -29,6 +29,15 @@ y axis
 note: end effector x value is usually (always?) negative
 """
 
+# mapping of which points to draw lines between
+LINE_MAPPING = [
+    (0, 2), # line between p0 and p2
+    (0, 1),
+    (1, 3),
+    (3, 4),
+]
+
+
 def norm(v):
     return np.linalg.norm(v)
     # return sqrt(v[0]**2 + v[1]**2)
@@ -47,21 +56,30 @@ mm = m / 1000
 # TODO: pull these from cad, not half-assed measurements
 L1 = 135 * mm
 L2 = 135 * mm
-L3 = 56 * mm
+L3 = 58 * mm
 L4 = 147 * mm
 L5 = 62 * mm
 
+SERVO_LIMITS = [
+    (0, 180),
+    (80, 180),
+    (100, 180),
+]
+
 # calculate the end-effector position (p4) from the angles of the two arm servos
 def forward(thetas):
-    p0 = np.array([0, 0])
-    p1 = p0 + vec_dir(thetas[1]) * L5
-    p2 = p0 + L1 * vec_dir(thetas[0])
-    i = circ2_intersect(p1, L2, p2, L3)
-    p3 = max(i, key=lambda p: p[0]) # right-most circle-circle intersection
-    p3 = np.array(p3)
-    d = p2 - p3
-    p4 = d / norm(d) * (L4) + p2
-    return [p0, p1, p2, p3, p4]
+    try:
+        p0 = np.array([0, 0])
+        p1 = p0 + vec_dir(thetas[1]) * L5
+        p2 = p0 + L1 * vec_dir(thetas[0])
+        i = circ2_intersect(p1, L2, p2, L3)
+        p3 = max(i, key=lambda p: p[0]) # right-most circle-circle intersection
+        p3 = np.array(p3)
+        d = p2 - p3
+        p4 = d / norm(d) * (L4) + p2
+        return [p0, p1, p2, p3, p4]
+    except TypeError as e:
+        return None
 
 
 # given the position of the end-effector, return the angles of the two arm servos

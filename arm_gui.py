@@ -15,25 +15,20 @@ plt.axis([-0.2, 0.2, 0, 0.4])
 X = np.array([1.88, pi/4])
 pts = arm_model.forward(X)
 
-# circles for each of the points
+# circles for each of the points on the arm
 circles = [plt.Circle(p, radius=0.005) for p in pts]
 for c in circles:
     plt.gca().add_patch(c)
 
-linemap = [
-    (0, 2),
-    (0, 1),
-    (1, 3),
-    (3, 4),
-]
-lines = [plt.Line2D((0, 0), (0, 0), lw=2) for i in range(len(linemap))]
+# draw a line for each entry in @LINE_MAPPING
+lines = [plt.Line2D((0, 0), (0, 0), lw=2) for i in range(len(LINE_MAPPING))]
 for line in lines:
     plt.gca().add_line(line)
 
-# TODO: update line positions
+# update lines from the data in @pts
 def update_lines():
-    for i in range(len(linemap)):
-        src, dst = linemap[i]
+    for i in range(len(LINE_MAPPING)):
+        src, dst = LINE_MAPPING[i]
         p0 = pts[src]
         p1 = pts[dst]
         lines[i].set_xdata([p0[0], p1[0]])
@@ -41,12 +36,12 @@ def update_lines():
 
 update_lines()
 
+# sliders for the two servos
 axcolor = 'lightgoldenrodyellow'
-axfreq = plt.axes([0.25, 0.1, 0.65, 0.03], axisbg=axcolor)
-axamp = plt.axes([0.25, 0.15, 0.65, 0.03], axisbg=axcolor)
-
-s_theta0 = Slider(axfreq, 'Servo0', pi/4, pi, valinit=X[0])
-s_theta1 = Slider(axamp, 'Servo1', 0, pi/2, valinit=X[1])
+ax_servo0 = plt.axes([0.25, 0.1, 0.65, 0.03], axisbg=axcolor)
+ax_servo1 = plt.axes([0.25, 0.15, 0.65, 0.03], axisbg=axcolor)
+s_theta0 = Slider(ax_servo0, 'Servo0', pi/4, pi, valinit=X[0])
+s_theta1 = Slider(ax_servo1, 'Servo1', 0, pi/2, valinit=X[1])
 
 def update(val):
     global X
@@ -63,18 +58,3 @@ s_theta0.on_changed(update)
 s_theta1.on_changed(update)
 
 plt.show()
-
-# fig, ax = plt.subplots()
-# plt.subplots_adjust(left=0.25, bottom=0.25)
-# l = plt.plot(lw=2, color='red')
-# plt.axis([-0.5, 0.5, 0, 1])
-
-# axcolor = 'lightgoldenrodyellow'
-# axfreq = plt.axes([0.25, 0.1, 0.65, 0.03], axisbg=axcolor)
-# axamp = plt.axes([0.25, 0.15, 0.65, 0.03], axisbg=axcolor)
-
-
-
-
-# s_theta0 = Slider(axfreq, 'Freq', 0.1, 30.0, valinit=pi/2)
-# s_theta1 = Slider(axamp, 'Amp', 0.1, 10.0, valinit=pi/2)
