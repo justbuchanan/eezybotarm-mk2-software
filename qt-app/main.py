@@ -4,7 +4,7 @@ from PyQt5.QtCore import QObject, QUrl, Qt, QRectF, pyqtProperty, QPointF
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 from PyQt5.QtQuick import QQuickPaintedItem
-from PyQt5.QtGui import QColor, QPen
+from PyQt5.QtGui import QColor, QPen, QPainter
 from math import *
 import numpy as np
 
@@ -52,6 +52,8 @@ class RobotView(QQuickPaintedItem):
 
     def paint(self, painter):
 
+        painter.setRenderHints(QPainter.Antialiasing)
+
         if not self.points or len(self.points) != 5:
             print("invalid points array, wrong length")
             return
@@ -94,16 +96,14 @@ if __name__ == "__main__":
 
 
     engine.load('main.qml')
-    def myHandler():
-        print('handler called')
 
     win = engine.rootObjects()[0]
 
-    button = win.findChild(QObject, "myButton")
-    button.clicked.connect(myHandler)
 
-    win.show()
-
+    # def myHandler():
+    #     print('handler called')
+    # button = win.findChild(QObject, "myButton")
+    # button.clicked.connect(myHandler)
 
     rview = win.findChild(RobotView, "robot")
 
@@ -123,5 +123,6 @@ if __name__ == "__main__":
 
     # servo1slider.value = 0.2
 
+    win.show()
 
     sys.exit(app.exec_())

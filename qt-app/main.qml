@@ -20,11 +20,11 @@ ApplicationWindow {
         anchors.centerIn: parent
     }
 
-    Button{
-        objectName: "myButton"
-        text : "About"
-        y : 70
-    }
+    // Button{
+    //     objectName: "myButton"
+    //     text : "About"
+    //     y : 70
+    // }
 
     Slider {
         id: servo0
