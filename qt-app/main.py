@@ -60,11 +60,11 @@ class RobotView(QQuickPaintedItem):
 
         # transform into the model's coordinate system
         # scale so:
-        #   x ranges from [-0.4, 0.1]
-        #   y ranges from [0, 0.5]
+        #   x ranges from [-0.5, 0.2]
+        #   y ranges from [-0.2, 0.5]
         # rotate (with a negative y scale) so that +y is up
-        painter.scale(self.width() / 0.5, -self.height() / 0.5)
-        painter.translate(QPointF(0.4, -0.5))
+        painter.scale(self.width() / 0.7, -self.height() / 0.7)
+        painter.translate(QPointF(0.4, -0.4))
 
         painter.save()
         painter.setPen(QPen(QColor('blue'), 0.01))

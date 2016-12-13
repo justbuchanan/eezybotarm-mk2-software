@@ -3,6 +3,7 @@ import QtQuick.Window 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.1
 import RobotView 1.0
+import QtQuick.Layouts 1.2
 
 ApplicationWindow {
     title: qsTr("Test Invoke")
@@ -10,41 +11,71 @@ ApplicationWindow {
     width: 200
     height: 200
 
-    RobotView {
-        id: robot
-        x: 10
-        y: 20
-        objectName: "robot"
-        width: 200
-        height: 200
-        anchors.centerIn: parent
-    }
+    ColumnLayout {
+        id: column
+        spacing: 10
 
-    // Button{
-    //     objectName: "myButton"
-    //     text : "About"
-    //     y : 70
-    // }
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: column.spacing
 
-    Slider {
-        id: servo0
-        objectName: "servo0"
+        GroupBox {
+            title: "Drawing"
 
-        y: 100
+            Layout.fillWidth: true
 
-        minimumValue: 0
-        maximumValue: 3.14
-        value: 1.8
-    }
-    Slider {
-        id: servo1
-        objectName: "servo0"
+            RobotView {
+                id: robot
+                // x: 0
+                // y: 0
+                // anchors.fill: parent
+                objectName: "robot"
+                // width: parent.parent.width
+                width: 500
+                height: 500
+                // anchors.fill: parent
+                anchors.centerIn: parent
+            }
+        }
 
-        y: 150
+        // Button{
+        //     objectName: "myButton"
+        //     text : "About"
+        //     y : 70
+        // }
+        GroupBox {
+            title: "Servo 0"
 
-        minimumValue: 0
-        maximumValue: 3.14
-        value: 0.2
+
+            Slider {
+                id: servo0
+                objectName: "servo0"
+
+                // y: 100
+
+                minimumValue: 0
+                maximumValue: 3.14
+                value: 1.8
+                // height: 50
+            }
+        }
+
+        GroupBox {
+            title: "Servo 1"
+            Slider {
+                id: servo1
+                objectName: "servo0"
+
+                // y: 150
+
+                minimumValue: 0
+                maximumValue: 3.14
+                value: 0.2
+                // height: 50
+            }
+        }
+
     }
 
     Binding {
