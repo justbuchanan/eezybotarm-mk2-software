@@ -2,11 +2,6 @@
 
 set -e
 
-sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y
-sudo apt-get update -y; true
-
-sudo apt-get clean
-
 CHECKSUM="$(sha256sum $0)"
 
 CACHE_DIR=pkgcache
@@ -16,6 +11,10 @@ if [[ -s $CHECKSUM_FILE ]] && [[ "$CHECKSUM" == "$(cat $CHECKSUM_FILE)" ]]; then
     echo "Package cache up to date, no need to download."
 else
     echo "Downloading packages..."
+
+    sudo add-apt-repository ppa:beineri/opt-qt542-trusty -y
+    sudo apt-get update -y; true
+    sudo apt-get clean
 
     sudo aptitude --download-only install -y qt54webkit libwebkit-dev libgstreamer0.10-dev
     sudo aptitude --download-only install -y arduino arduino-mk
