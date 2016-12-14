@@ -15,7 +15,7 @@ BOARD_TAG=uno
 
 ARDUINO_LIBRARIES=Wire Servo
 
-CXXFLAGS_STD = -std=gnu++0x
+CPPFLAGS = -std=gnu++0x
 
 include $(ARDMK_DIR)/Arduino.mk
 
