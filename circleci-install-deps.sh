@@ -12,7 +12,7 @@ CHECKSUM="$(sha256sum $0)"
 CACHE_DIR=pkgcache
 CHECKSUM_FILE=$CACHE_DIR/installer-checksum.txt
 
-if [[ -s $CHECKSUM_FILE ]] && [[ "CHECKSUM" -eq "$(cat $CHECKSUM_FILE)" ]]; then
+if [[ -s $CHECKSUM_FILE ]] && [[ "$CHECKSUM" == "$(cat $CHECKSUM_FILE)" ]]; then
     echo "Package cache up to date, no need to download."
 else
     echo "Downloading packages..."
