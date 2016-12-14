@@ -37,10 +37,11 @@ class ArmCommand(QObject):
 class ArmDriver(QObject):
     def __init__(self, parent):
         QObject.__init__(self, parent)
-        self._command = ArmCommand(None, [100, 100, 100])
+        self._command = ArmCommand(None, [100, 100, 100, 100])
         self._port = '/dev/arduino'
         self._arm = None
         self._connected = False
+        self.connect()
 
     def connect(self):
         try:
@@ -55,6 +56,10 @@ class ArmDriver(QObject):
     @pyqtProperty(bool, notify=connected_changed)
     def connected(self):
         return self._connected
+    @connected.setter
+    def connected(self, value):
+        self._connected = value
+        self.connected_changed.emit(value)
 
     @pyqtProperty(ArmCommand)
     def command(self):
@@ -63,6 +68,8 @@ class ArmDriver(QObject):
     def command(self, value):
         self._command = value
         if value and self._arm:
+            if len(value.servos) != 4:
+                raise RuntimeError("Invalid number of servos")
             # print('sent cmd: %s' % value)
             self._arm.set_servo_values(value.servos)
 
@@ -98,6 +105,7 @@ class ArmModel(QObject):
         # TODO: share this code with motion_path.py
         servos = clip_servos(servos)
         servos = [int(s) for s in servos]
+        servos.append(180) # gripper servo
         cmd = ArmCommand(None, servos)
         self.command = cmd
 
