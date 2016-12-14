@@ -85,19 +85,22 @@ def forward(thetas):
 # given the position of the end-effector, return the angles of the two arm servos
 # note: ignores the rotation of the base
 def inverse_2d(p4):
-    p0 = np.array([0, 0])
+    try:
+        p0 = np.array([0, 0])
 
-    p2 = max(circ2_intersect(p4, L4, p0, L1), key=lambda p: p[1]) # top-most intersection point
+        p2 = max(circ2_intersect(p4, L4, p0, L1), key=lambda p: p[1]) # top-most intersection point
 
-    theta0 = atan2(p2[1] - p0[1], p2[0] - p0[0])
+        theta0 = atan2(p2[1] - p0[1], p2[0] - p0[0])
 
-    d = p2 - p4
-    d = np.array([float(d[0]), float(d[1])])
-    p3 =  d / np.linalg.norm(d) * L3 + p2
-    p1 = max(circ2_intersect(p3, L2, p0, L5), key=lambda p: p[0])
-    theta1 = atan2(p1[1] - p0[1], p1[0] - p0[0])
+        d = p2 - p4
+        d = np.array([float(d[0]), float(d[1])])
+        p3 =  d / np.linalg.norm(d) * L3 + p2
+        p1 = max(circ2_intersect(p3, L2, p0, L5), key=lambda p: p[0])
+        theta1 = atan2(p1[1] - p0[1], p1[0] - p0[0])
 
-    return np.array([theta0, theta1])
+        return np.array([theta0, theta1])
+    except TypeError as e:
+        return None
 
 
 if __name__ == '__main__':
