@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
-# TODO: /dev/ttyACM0 should be accessible without sudo
+# Program for using the SpaceNavigator 3d mouse with the EEZYbotARM.
+# Note: make sure spacenavd is running before starting this
 
 from __future__ import print_function
 from spnav import *

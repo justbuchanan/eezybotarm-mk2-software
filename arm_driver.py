@@ -2,8 +2,8 @@ import serial
 import time
 
 
-# command delimeter for the serial communication to arduino
-MAGIC = 200
+# command delimiter for the serial communication to arduino
+SERIAL_MSG_DELIMITER = 200
 
 def clip(x, minval, maxval):
     if x > maxval:
@@ -30,5 +30,5 @@ class Arm:
 
     # @param servos list of three int values between 0 and 180
     def set_servo_values(self, servos):
-        encoded_msg = [chr(c) for c in [MAGIC] + servos]
+        encoded_msg = [SERIAL_MSG_DELIMITER] + list([chr(c) for c in  servos])
         self._arduino.write(encoded_msg)
