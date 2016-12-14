@@ -2,14 +2,15 @@ import QtQuick 2.2
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.1
-import RobotView 1.0
 import QtQuick.Layouts 1.2
+
+import RobotView 1.0
 import ArmDriver 1.0
 import ArmCommand 1.0
 import ArmModel 1.0
 
 ApplicationWindow {
-    title: qsTr("Test Invoke")
+    title: "Arm Control"
 
     width: 200
     height: 200
@@ -66,7 +67,7 @@ ApplicationWindow {
                 }
                 CheckBox {
                     text: "connected"
-                    checked: armDriver.connectified
+                    checked: armDriver.connected
                 }
             }
         }

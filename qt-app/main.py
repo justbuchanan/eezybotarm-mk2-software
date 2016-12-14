@@ -45,7 +45,7 @@ class ArmDriver(QObject):
         self._command = ArmCommand(None, [100, 100, 100])
         self._port = '/dev/arduino'
         self._arm = None
-        self._connectified = False
+        self._connected = False
 
     def connect(self):
         try:
@@ -53,13 +53,13 @@ class ArmDriver(QObject):
         except ConnectionError as e:
             print("failed to connect to arduino")
 
-        self.connectified = self._arm != None
+        self.connected = self._arm != None
 
-    connectified_changed = pyqtSignal(bool)
+    connected_changed = pyqtSignal(bool)
 
-    @pyqtProperty(bool, notify=connectified_changed)
-    def connectified(self):
-        return self._connectified
+    @pyqtProperty(bool, notify=connected_changed)
+    def connected(self):
+        return self._connected
 
     @pyqtProperty(ArmCommand)
     def command(self):
@@ -218,30 +218,10 @@ if __name__ == "__main__":
 
     win = engine.rootObjects()[0]
 
-
     # def myHandler():
     #     print('handler called')
     # button = win.findChild(QObject, "myButton")
     # button.clicked.connect(myHandler)
 
-    # rview = win.findChild(RobotView, "robot")
-
-    # servo0slider = win.findChild(QObject, "servo0")
-    # servo1slider = win.findChild(QObject, "servo1")
-
-    # def recalculate():
-    #     # X = np.array([pi/2, pi/4])
-    #     X = np.array([servo0slider.value, servo1slider.value])
-    #     rview.points = arm_model.forward(X)
-
-    # rview.servo0.valueChanged.connect(lambda: recalculate())
-
-
-    # servo0slider.onPositionChanged.connect(lambda: recalculate())
-    # servo1slider.onValueChanged.connect(lambda: recalculate())
-
-    # servo1slider.value = 0.2
-
     win.show()
-
     sys.exit(app.exec_())
