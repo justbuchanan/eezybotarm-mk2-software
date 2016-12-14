@@ -68,6 +68,7 @@ ApplicationWindow {
                 CheckBox {
                     text: "connected"
                     checked: armDriver.connected
+                    enabled: false
                 }
             }
         }
@@ -82,13 +83,21 @@ ApplicationWindow {
             ColumnLayout {
                 anchors.fill: parent
 
-                Slider {
-                    id: servo0
-                    objectName: "servo0"
+                RowLayout {
 
-                    minimumValue: -3.14/2;
-                    maximumValue: 3.14/2
-                    value: 0.2
+                    Slider {
+                        id: servo0
+                        objectName: "servo0"
+                        // label: "Base"
+
+                        minimumValue: -3.14/2;
+                        maximumValue: 3.14/2
+                        value: 0.2
+                    }
+
+                    Text {
+                        text: Math.round(servo0.value * 100) / 100
+                    }
                 }
 
                 Slider {
@@ -107,6 +116,11 @@ ApplicationWindow {
                     minimumValue: 0
                     maximumValue: 3.14
                     value: 0.2
+                }
+                CheckBox {
+                    text: "Gripper"
+                    checked: armDriver.connected
+                    id: gripper
                 }
             }
         }
@@ -127,6 +141,11 @@ ApplicationWindow {
         target: arm
         property: "servo2"
         value: servo2.value
+    }
+    Binding {
+        target: arm
+        property: "gripper_closed"
+        value: gripper.checked
     }
     Binding {
         target: robotDrawing

@@ -89,6 +89,7 @@ class ArmModel(QObject):
         self._servo2 = pi/4
         self._config = None
         self._command = None
+        self._gripper_closed = False
 
     # update model points based on servo values
     def recalculate(self):
@@ -105,7 +106,8 @@ class ArmModel(QObject):
         # TODO: share this code with motion_path.py
         servos = clip_servos(servos)
         servos = [int(s) for s in servos]
-        servos.append(180) # gripper servo
+        # TODO: move gripper values elsewhere
+        servos.append(50 if self.gripper_closed else 180) # gripper servo
         cmd = ArmCommand(None, servos)
         self.command = cmd
 
@@ -131,6 +133,14 @@ class ArmModel(QObject):
     @servo2.setter
     def servo2(self, value):
         self._servo2 = value
+        self.recalculate()
+
+    @pyqtProperty(bool)
+    def gripper_closed(self):
+        return self._gripper_closed
+    @gripper_closed.setter
+    def gripper_closed(self, value):
+        self._gripper_closed = value
         self.recalculate()
 
     @pyqtProperty(ArmConfig, notify=config_changed)
