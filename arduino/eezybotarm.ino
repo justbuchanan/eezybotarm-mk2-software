@@ -1,26 +1,28 @@
 #include <Servo.h>
 
+const uint8_t NUM_SERVOS = 4;
 
-const uint8_t SERVO_PINS[4] = {
+// pin mapping
+const uint8_t SERVO_PINS[NUM_SERVOS] = {
     9,
     10,
     11,
     6,
 };
 
-Servo _servos[4];
+Servo _servos[NUM_SERVOS];
 
-void setState(const uint8_t servos[4]) {
-    for (int i = 0; i < 4; i++) {
+void setState(const uint8_t servos[NUM_SERVOS]) {
+    for (int i = 0; i < NUM_SERVOS; i++) {
         _servos[i].write(servos[i]);
     }
 }
 
 // servo values as 8 bit numbers - initialized to something reasonable
-uint8_t servoValues[4] = {100, 100, 100, 180};
+uint8_t servoValues[NUM_SERVOS] = {100, 100, 100, 180};
 
 void setup() {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < NUM_SERVOS; i++) {
         _servos[i].attach(SERVO_PINS[i]);
     }
 
@@ -42,12 +44,12 @@ void loop() {
         uint8_t c = Serial.read();
         if (c == MSG_DELIMITER) {
             msgIndex = 0;
-        } else if (msgIndex >= 4) {
+        } else if (msgIndex >= NUM_SERVOS) {
             // invalid
             haveMessage = false;
         } else {
             servoValues[msgIndex++] = c;
-            if (msgIndex == 4) {
+            if (msgIndex == NUM_SERVOS) {
                 haveMessage = true;
                 // Serial.println("got message!");
 
