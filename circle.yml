@@ -9,5 +9,5 @@ dependencies:
 test:
   pre:
     # build arduino code
-    - make
+    - cd arduino && make
 
