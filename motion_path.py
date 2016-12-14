@@ -27,7 +27,7 @@ def path_from_waypoints(waypoints, steps_per_m=5000):
             continue
         direc = delta / dist
 
-        stepcount = np.matmul(abs(delta), np.array([0.3, 1.0, 1.5]) * steps_per_m)
+        stepcount = np.matmul(abs(delta), np.array([0.3, 1.0, 1.3]) * steps_per_m)
         # print('stepcount: %d' % stepcount)
         dist_vals = np.linspace(0, dist, num=stepcount)
 
@@ -65,6 +65,7 @@ def plot_path(path):
     def plot_servos(servos):
         plt.title('Servo values')
         ii = list(range(len(servos)))
+        plt.plot(ii, [s[0] for s in servos], color='r', label='s0')
         plt.plot(ii, [s[1] for s in servos], color='b', label='s1')
         plt.plot(ii, [s[2] for s in servos], color='g', label='s2')
         plt.legend()
@@ -99,39 +100,41 @@ def run_waypoints(arm, waypoints, speed):
     steps_per_m = 1 / (speed * dt)
     path = path_from_waypoints(waypoints, steps_per_m)
 
-    # plot_path(path + list(reversed(path)))
-    # sys.exit()
-    # return
+    for p in path:
+        state = endpoint_state_to_servos(p)
+        arm.set_servo_values(state)
+        print(state)
 
-    while True:
-        for p in path:
-            state = endpoint_state_to_servos(p)
-            arm.set_servo_values(state)
-            print(state)
-
-            time.sleep(dt)
+        time.sleep(dt)
 
 
 
 if __name__ == '__main__':
     waypoints = [
-        # np.array([pi/4, -0.15, -0.02]),
-        np.array([pi/6, -0.08, -0.01]),
-        np.array([-pi/6, -0.15, 0.0]),
-        np.array([pi/6, -0.2, 0.10]),
-        np.array([-pi/6, -0.12, 0.0]),
-        # np.array([0, -0.15, 0.01]),
-        # np.array([0, -0.15, -0.02]),
-        # np.array([0, -0.06, 0.1]),
+        np.array([0, 00, 0.05]),
+        np.array([pi/6, -0.09, -0.03]),
+        np.array([pi/12, -0.1, -0.03]),
+        np.array([0, -0.06, 0.16]),
+        # np.array([0, -0.06, 0.16]),
+        # np.array([-pi/6, -0.15, 0.0]),
+        np.array([-pi/12, -0.1, -0.03]),
+        np.array([-pi/6, -0.09, -0.03]),
+        np.array([-pi/6, -0.09, -0.06]),
+        np.array([-pi/6, -0.09, -0.03]),
     ]
 
     arm = Arm()
-    speed = 0.09
-    # speed = 0.1
+    speed = 0.2
+
+    # servos = endpoint_state_to_servos(np.array([0, -0.1, 0.12]))
+    # arm.set_servo_values(servos)
+    # sys.exit()
 
     # plot_path(path_from_waypoints(waypoints) + path_from_waypoints(list(reversed(waypoints))) + path_from_waypoints(waypoints))
     # sys.exit()
 
     while True:
+        print('---------\nforwards time!\n-----------')
         run_waypoints(arm, waypoints, speed)
-        run_waypoints(arm, [waypoints[:-1]] + list(reversed(waypoints)), speed)
+        print('---------\nbackwards time!\n-----------')
+        run_waypoints(arm, list(reversed(waypoints)), speed)
