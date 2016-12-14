@@ -41,15 +41,6 @@ class ArmDriver(QObject):
         self._port = '/dev/arduino'
         self._arm = None
         self._connected = False
-        self.connect()
-
-    def connect(self):
-        try:
-            self._arm = Arm(port=self.port)
-        except ConnectionError as e:
-            print("failed to connect to arduino")
-
-        self.connected = self._arm != None
 
     connected_changed = pyqtSignal(bool)
 
@@ -58,8 +49,23 @@ class ArmDriver(QObject):
         return self._connected
     @connected.setter
     def connected(self, value):
-        self._connected = value
-        self.connected_changed.emit(value)
+        if value != self._connected:
+            if value:
+                try:
+                    self._arm = Arm(port=self.port)
+                    self._connected = self._arm != None
+                except ConnectionError as e:
+                    print("failed to connect to arduino")
+            else:
+                del self._arm
+                self._arm = None
+                self._connected = False
+
+
+            self.connected_changed.emit(value)
+
+
+            self._connected = value
 
     @pyqtProperty(ArmCommand)
     def command(self):
@@ -67,11 +73,14 @@ class ArmDriver(QObject):
     @command.setter
     def command(self, value):
         self._command = value
-        if value and self._arm:
-            if len(value.servos) != 4:
+        self.send_command()
+
+    def send_command(self):
+        if self._command and self._arm:
+            if len(self._command.servos) != 4:
                 raise RuntimeError("Invalid number of servos")
-            # print('sent cmd: %s' % value)
-            self._arm.set_servo_values(value.servos)
+            # print('sent cmd: %s' % self._command)
+            self._arm.set_servo_values(self._command.servos)
 
     @pyqtProperty(str)
     def port(self):

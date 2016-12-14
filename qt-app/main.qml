@@ -68,7 +68,7 @@ ApplicationWindow {
                 CheckBox {
                     text: "connected"
                     checked: armDriver.connected
-                    enabled: false
+                    id: arduino_connected
                 }
             }
         }
@@ -151,5 +151,10 @@ ApplicationWindow {
         target: robotDrawing
         property: "config"
         value: arm.config
+    }
+    Binding {
+        target: armDriver
+        property: "connected"
+        value: arduino_connected.checked
     }
 }
