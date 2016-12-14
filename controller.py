@@ -59,7 +59,7 @@ while True:
         #     else:
         #         r[i] = 
 
-    state = [80, 110, 100]
+    state = [80, 110, 100, 180]
     grip_pos = np.array([-0.1, 0.05])
 
 
@@ -72,6 +72,7 @@ while True:
             state[0] = calc_base_servo_cmd(-r[1] / 350.0 * pi/4)
             state[1] -= t[2] / 350.0 * 90
             state[2] += t[1] / 350.0 * 90
+            state[3] -= r[0] / 350.0 * 120
 
             grip_pos[0] -= t[2] / 350.0 * .1
             grip_pos[1] += t[1] / 350.0 * .1

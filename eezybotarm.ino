@@ -6,13 +6,14 @@ struct ServoRange {
 };
 
 struct ArmState {
-    ArmState(size_t i = 0, size_t j = 0, size_t k = 0) {
+    ArmState(size_t i = 0, size_t j = 0, size_t k = 0, size_t grip = 0) {
         joints[0] = i;
         joints[1] = j;
         joints[2] = k;
+        joints[3] = grip;
     }
 
-    size_t joints[3];
+    size_t joints[4];
 };
 
 void Print(const ArmState& armState) {
@@ -23,8 +24,8 @@ class Arm {
 public:
     Arm() {}
 
-    void Init(const size_t pins[3]) {
-        for (int i = 0; i < 3; i++) {
+    void Init(const size_t pins[4]) {
+        for (int i = 0; i < 4; i++) {
             _servos[i].attach(pins[i]);
         }
         _initialized = true;
@@ -32,7 +33,7 @@ public:
 
     void setState(ArmState state) {
         _state = state;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             _servos[i].write(_state.joints[i]);
         }
     }
@@ -44,16 +45,17 @@ public:
 
 private:
     ArmState _state;
-    Servo _servos[3];
+    Servo _servos[4];
     bool _initialized = false;
 };
 
 //==============================================================================
 
-const size_t SERVO_PINS[3] = {
+const size_t SERVO_PINS[4] = {
     9,
     10,
     11,
+    6,
 };
 
 // global arm object
@@ -63,7 +65,7 @@ void setup() {
     arm.Init(SERVO_PINS);
 
     // something reasonable
-    arm.setState({100, 100, 100});
+    arm.setState({100, 100, 100, 180});
 
     arm.printState();
 
@@ -78,7 +80,7 @@ void setup() {
 // a number not in the range of servo values that indicates the start of a message
 const uint8_t MAGIC = 200;
 // Format: '<1><2><3>' where 1, 2, 3 are joint servo values as 8 bit numbers
-uint8_t serialMsg[3];
+uint8_t serialMsg[4];
 size_t msgIndex = 0;
 bool haveMessage = false;
 
@@ -87,17 +89,17 @@ void loop() {
         uint8_t c = Serial.read();
         if (c == MAGIC) {
             msgIndex = 0;
-        } else if (msgIndex >= 3) {
+        } else if (msgIndex >= 4) {
             // invalid
             haveMessage = false;
         } else {
             serialMsg[msgIndex++] = c;
-            if (msgIndex == 3) {
+            if (msgIndex == 4) {
                 haveMessage = true;
                 // Serial.println("got message!");
                 // Serial.println(0);
 
-                arm.setState({serialMsg[0], serialMsg[1], serialMsg[2]});
+                arm.setState({serialMsg[0], serialMsg[1], serialMsg[2], serialMsg[3]});
             }
         }
         // Serial.print("msgIndex: ");
