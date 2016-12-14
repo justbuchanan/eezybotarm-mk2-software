@@ -21,8 +21,7 @@ class TestCirc2Intersect(unittest.TestCase):
             np.array([10, 10]), .1,
         )
 
-        print(intersections, file=sys.stderr)
-        self.assertEqual(0, len(intersections))
+        self.assertEqual(None, intersections)
 
     def test_one_intersection(self):
         intersections = circ2_intersect(
@@ -30,4 +29,5 @@ class TestCirc2Intersect(unittest.TestCase):
             np.array([0, 2]), 1,
         )
 
-        self.assertEqual(1, len(intersections))
+        self.assertEqual(2, len(intersections))
+        self.assertItemsEqual(intersections[0], intersections[1])
