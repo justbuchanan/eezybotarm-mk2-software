@@ -31,6 +31,8 @@ if __name__ == "__main__":
     ctx = engine.rootContext()
     ctx.setContextProperty("main", engine)
 
+    engine.addImportPath('./')
+
     engine.load('main.qml')
 
     win = engine.rootObjects()[0]
