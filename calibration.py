@@ -3,6 +3,33 @@
 import numpy as np
 from math import *
 import arm_model
+import os
+import yaml
+import logging
+
+def clip(x, minval, maxval):
+    if x > maxval:
+        return maxval
+    elif x < minval:
+        return minval
+    else:
+        return x
+
+CALIBRATION_FILE = 'calibration.yml'
+if os.path.exists(CALIBRATION_FILE):
+    SERVO_LIMITS = yaml.load(open(CALIBRATION_FILE, 'r'))['limits']
+    logging.info("Loaded servo limits from '%s'" % CALIBRATION_FILE)
+else:
+    logging.warning("No calibration file found at '%s', using (0, 180) for all" % CALIBRATION_FILE)
+    SERVO_LIMITS = [{'min': 0, 'max': 180}] * arm_model.NUM_SERVOS
+
+def limit_servos(servos):
+    for i in range(arm_model.NUM_SERVOS):
+        l = SERVO_LIMITS[i]
+        servos[i] = clip(servos[i], l['min'], l['max'])
+    return servos
+
+
 
 # note: this completely ignores the rotational servo in the base
 

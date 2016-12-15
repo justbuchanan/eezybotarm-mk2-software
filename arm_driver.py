@@ -7,16 +7,7 @@ import arm_model
 # command delimiter for the serial communication to arduino
 SERIAL_MSG_DELIMITER = 200
 
-def clip(x, minval, maxval):
-    if x > maxval:
-        return maxval
-    elif x < minval:
-        return minval
-    else:
-        return x
 
-def clip_servos(servos):
-    return [clip(s, 0, 180) for s in servos]
 
 class ConnectionError(RuntimeError): pass
 

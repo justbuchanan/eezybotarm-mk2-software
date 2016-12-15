@@ -4,7 +4,7 @@ from math import *
 import numpy as np
 
 from arm_driver import *
-from calibration import *
+import calibration
 
 import arm_model
 
@@ -105,14 +105,16 @@ class ArmModel(QObject):
         if cfg.points:
             self.config = cfg
 
-        arm_servos = calc_arm_servos(X)
-        base = calc_base_servo_cmd(self.servo0)
+        arm_servos = calibration.calc_arm_servos(X)
+        base = calibration.calc_base_servo_cmd(self.servo0)
         servos = [base, arm_servos[0], arm_servos[1]]
         # TODO: share this code with motion_path.py
-        servos = clip_servos(servos)
-        servos = [int(s) for s in servos]
+        
         # TODO: move gripper values elsewhere
         servos.append(50 if self.gripper_closed else 180) # gripper servo
+
+        servos = calibration.limit_servos(servos)
+        servos = [int(s) for s in servos]
         cmd = ArmCommand(None, servos)
         self.command = cmd
 

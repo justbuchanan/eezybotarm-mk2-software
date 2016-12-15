@@ -11,8 +11,9 @@ import serial
 import time
 import arm_model
 import numpy as np
-from calibration import *
+import calibration
 from arm_driver import *
+from math import *
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QThread
 
@@ -67,10 +68,11 @@ class SpnavController(QThread):
                 if not args.dumb:
                     thetas = arm_model.inverse_2d(grip_pos)
                     if thetas != None:
-                        arm_cmds = calc_arm_servos(thetas)
+                        arm_cmds = calibration.calc_arm_servos(thetas)
                         state[1:3] = arm_cmds
 
-                state = clip_servos(state)
+                print(state)
+                state = calibration.limit_servos(state)
                 state = [int(s) for s in state]
                 # state[3] = 180 # safety override. TODO remove
                 arm.set_servo_values(state)
@@ -82,7 +84,7 @@ class SpnavController(QThread):
             if event and event.ev_type == SPNAV_EVENT_MOTION:
                 t, r = event.translation, event.rotation
                 print(t)
-                state[0] = calc_base_servo_cmd(-r[1] / 350.0 * pi/4)
+                state[0] = calibration.calc_base_servo_cmd(-r[1] / 350.0 * pi/4)
                 state[1] = 110 - t[2] / 350.0 * 90
                 state[2] = 100 + t[1] / 350.0 * 90
 
