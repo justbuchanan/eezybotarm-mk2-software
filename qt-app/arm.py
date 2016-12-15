@@ -78,7 +78,7 @@ class ArmDriver(QObject):
             # print('sent cmd: %s' % self._command)
             self._arm.set_servo_values(self._command.servos)
 
-    @pyqtProperty(str)
+    @pyqtProperty(str, constant=True)
     def port(self):
         return self._port
 

@@ -35,24 +35,36 @@ ApplicationWindow {
         id: column
         spacing: 10
 
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
+        // anchors.top: parent.top
+        // anchors.left: parent.left
+        // anchors.right: parent.right
+        anchors.fill: parent
+        anchors.centerIn: parent
         anchors.margins: column.spacing
 
 
         GroupBox {
             title: "Drawing"
 
-            Layout.fillWidth: true
+            // Layout.fillWidth: true
+            // Layout.fillHeight: true
+            // anchors.fill: parent
+            // anchors.centerIn: parent
+            height: parent.height / 2
+            width: parent.width
 
             RobotView {
                 id: robotDrawing
                 objectName: "robotDrawing"
-                // anchors.fill: parent
-                // anchors.centerIn: parent
-                width: 200
-                height: 200
+                anchors.fill: parent
+                anchors.centerIn: parent
+                // width: 200
+
+                height: parent.height / 2
+                //  Component.onCompleted: {
+                //     robotDrawing.implicitWidth = contentView.implicitWidth
+                //     robotDrawing.implicitHeight = contentView.implicitHeight
+                // }
             }
         }
 
@@ -69,6 +81,8 @@ ApplicationWindow {
                     text: "connected"
                     checked: armDriver.connected
                     id: arduino_connected
+
+                    Shortcut { sequence: 'c'; onActivated: arduino_connected.checked = !arduino_connected.checked }
                 }
             }
         }
@@ -107,6 +121,9 @@ ApplicationWindow {
                     minimumValue: 0
                     maximumValue: 3.14
                     value: 1.8
+
+                    Shortcut { sequence: 'h'; onActivated: servo1.value += 0.05 }
+                    Shortcut { sequence: 'l'; onActivated: servo1.value -= 0.05 }
                 }
 
                 Slider {
@@ -116,6 +133,9 @@ ApplicationWindow {
                     minimumValue: 0
                     maximumValue: 3.14
                     value: 0.2
+
+                    Shortcut { sequence: 'j'; onActivated: servo2.value += 0.05 }
+                    Shortcut { sequence: 'k'; onActivated: servo2.value -= 0.05 }
                 }
                 CheckBox {
                     text: "Gripper"
