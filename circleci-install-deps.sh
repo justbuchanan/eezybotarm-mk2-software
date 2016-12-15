@@ -20,7 +20,7 @@ else
     sudo aptitude --download-only install -y arduino arduino-mk
 
     mkdir -p $CACHE_DIR
-    cp /var/cache/apt/archives/*.deb $CACHE_DIR
+    sudo mv /var/cache/apt/archives/*.deb $CACHE_DIR
 
     echo "$CHECKSUM" > $CHECKSUM_FILE
 fi
