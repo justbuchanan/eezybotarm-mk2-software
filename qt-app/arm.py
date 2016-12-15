@@ -61,11 +61,9 @@ class ArmDriver(QObject):
                 self._arm = None
                 self._connected = False
 
-
             self.connected_changed.emit(value)
-
-
             self._connected = value
+            self.send_command()
 
     @pyqtProperty(ArmCommand)
     def command(self):
@@ -77,8 +75,6 @@ class ArmDriver(QObject):
 
     def send_command(self):
         if self._command and self._arm:
-            if len(self._command.servos) != 4:
-                raise RuntimeError("Invalid number of servos")
             # print('sent cmd: %s' % self._command)
             self._arm.set_servo_values(self._command.servos)
 

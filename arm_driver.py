@@ -41,7 +41,10 @@ class Arm:
 
     # @param servos list of three int values between 0 and 180
     def set_servo_values(self, servos):
+        if len(servos) != 4:
+            raise RuntimeError("Invalid number of servos")
         self._encoded_msg = [SERIAL_MSG_DELIMITER] + list([chr(c) for c in  servos])
 
     def send_message(self):
-        self._arduino.write(self._encoded_msg)
+        if self._encoded_msg:
+            self._arduino.write(self._encoded_msg)

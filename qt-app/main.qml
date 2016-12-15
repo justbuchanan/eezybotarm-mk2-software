@@ -119,7 +119,7 @@ ApplicationWindow {
                 }
                 CheckBox {
                     text: "Gripper"
-                    checked: armDriver.connected
+                    checked: armDriver.gripper_closed
                     id: gripper
                 }
             }
