@@ -19,8 +19,8 @@ void setup() {
 }
 
 
-// timeout after one second
-const unsigned long CMD_TIMEOUT = 1 * 1000;
+// timeout after 1/2 second
+const unsigned long CMD_TIMEOUT = 1000 / 2;
 
 // a number not in the range of servo values that indicates the start of a message
 const uint8_t MSG_DELIMITER = 200;
