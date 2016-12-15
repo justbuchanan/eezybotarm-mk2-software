@@ -42,5 +42,14 @@ if __name__ == "__main__":
     # button = win.findChild(QObject, "myButton")
     # button.clicked.connect(myHandler)
 
+    limits = win.findChild(QObject, "servoLimitsModel")
+
+    # NUM_SERVOS = 4 # TODO: move
+    # for i in range(NUM_SERVOS):
+    #     print(limits)
+
+    #     limits.append({'servoIndex': i})
+
+
     win.show()
     sys.exit(app.exec_())

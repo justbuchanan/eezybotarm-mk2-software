@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Window 2.1
-import QtQuick.Controls 1.2
-import QtQuick.Dialogs 1.1
+import QtQuick.Controls 1.0
+import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.2
 
 import components 1.0
@@ -142,6 +142,70 @@ ApplicationWindow {
                         sequence: 'g'
                         onActivated: gripper.checked = !gripper.checked
                     }
+                }
+            }
+        }
+
+
+        GroupBox {
+            title: "Servo Limits"
+
+
+            Layout.fillWidth: true
+            // Layout.fillHeight: true
+            // anchors.fill: parent
+            // anchors.centerIn: parent
+            height: parent.height / 3
+            // width: parent.width
+
+            ColumnLayout {
+                anchors.fill: parent
+
+                ListView {
+                    id: listView
+                    anchors.fill: parent
+                    model: listModel
+                    delegate: RowLayout {
+                        Text {
+                            text: "Servo " + servoIndex
+                            // anchors.centerIn: parent
+                        }
+                        ServoSlider {
+                            slider {
+                                minimumValue: 0
+                                maximumValue: 180
+                                value: 0
+                            }
+
+                        }
+
+                        ServoSlider {
+                            slider {
+                                minimumValue: 0
+                                maximumValue: 180
+                                value: 180
+                            }
+                        }
+
+                    }
+                }
+
+                ListModel {
+                    id: listModel
+                    objectName: "servoLimitsModel"
+
+                    // Component.onCompleted: {
+                    //     for (var i = 0; i < 4; i++) {
+                    //         append(createListElement(i));
+                    //     }
+                    // }
+
+                    // function createListElement(i) {
+                    //     return {
+                    //         servoIndex: i,
+                    //         value: 3
+                    //     };
+                    // }
                 }
             }
         }
