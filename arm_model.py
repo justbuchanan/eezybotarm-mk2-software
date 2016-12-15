@@ -29,6 +29,8 @@ y axis
 note: end effector x value is usually (always?) negative
 """
 
+NUM_SERVOS = 4
+
 # mapping of which points to draw lines between
 LINE_MAPPING = [
     (0, 2), # line between p0 and p2

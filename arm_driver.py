@@ -1,6 +1,7 @@
 import serial
 import time
 from PyQt5.QtCore import QTimer
+import arm_model
 
 
 # command delimiter for the serial communication to arduino
@@ -41,7 +42,7 @@ class Arm:
 
     # @param servos list of three int values between 0 and 180
     def set_servo_values(self, servos):
-        if len(servos) != 4:
+        if len(servos) != arm_model.NUM_SERVOS:
             raise RuntimeError("Invalid number of servos")
         self._encoded_msg = [SERIAL_MSG_DELIMITER] + list([chr(c) for c in  servos])
 
