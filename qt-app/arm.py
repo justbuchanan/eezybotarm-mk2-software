@@ -75,7 +75,7 @@ class ArmDriver(QObject):
 
     def send_command(self):
         if self._command and self._arm:
-            # print('sent cmd: %s' % self._command)
+            # print('sent cmd: %s' % self._command.servos)
             self._arm.set_servo_values(self._command.servos)
 
     @pyqtProperty(str, constant=True)
@@ -167,5 +167,3 @@ class ArmModel(QObject):
     def command(self, value):
         self._command = value
         self.command_changed.emit(value)
-
-

@@ -3,6 +3,8 @@ from PyQt5.QtQuick import QQuickPaintedItem
 from PyQt5.QtGui import QColor, QPen, QPainter
 from arm import ArmConfig
 import arm_model
+import numpy as np
+from math import *
 
 class RobotView(QQuickPaintedItem):
     def __init__(self, parent):
@@ -41,6 +43,22 @@ class RobotView(QQuickPaintedItem):
         painter.scale(scale_factor, -scale_factor)
         painter.translate(QPointF(0.4, -0.4))
 
+        # draw sampled points on the workspace - show the robots usable area
+        ws_color = QColor('black')
+        ws_color.setAlphaF(0.2)
+        painter.setPen(QPen(ws_color, 0))
+        painter.setBrush(ws_color)
+
+        for s1 in np.linspace(1.6, 2.8, 50):
+            for s2 in np.linspace(pi * 0.1, 1.1, 50):
+                angles = np.array([s1, s2])
+                pts = arm_model.forward(angles)
+                if pts:
+                    g = pts[4]
+                    r = 0.002
+                    painter.drawEllipse(QPointF(g[0], g[1]), r,r)
+
+
 
         painter.save()
         painter.setPen(QPen(QColor('blue'), 0.01))
@@ -58,4 +76,5 @@ class RobotView(QQuickPaintedItem):
         for p in pts:
             rad = 0.01
             painter.drawEllipse(p, rad, rad)
+
 

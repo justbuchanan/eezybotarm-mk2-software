@@ -74,6 +74,8 @@ def forward(thetas):
         p2 = p0 + L1 * vec_dir(thetas[0])
         i = circ2_intersect(p1, L2, p2, L3)
         p3 = max(i, key=lambda p: p[0]) # right-most circle-circle intersection
+        # if p3 is below p2, we've found an invalid solution and this configuration isn't possible
+        if p3[1] < p2[1]: return None
         p3 = np.array(p3)
         d = p2 - p3
         p4 = d / norm(d) * (L4) + p2
