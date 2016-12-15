@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.1
@@ -121,6 +121,11 @@ ApplicationWindow {
                     text: "Gripper"
                     checked: armDriver.gripper_closed
                     id: gripper
+
+                    Shortcut {
+                        sequence: 'g'
+                        onActivated: gripper.checked = !gripper.checked
+                    }
                 }
             }
         }
