@@ -3,6 +3,7 @@ import QtQuick.Window 2.1
 import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.2
+import QtCharts 1.2
 
 import components 1.0
 
@@ -48,12 +49,12 @@ ApplicationWindow {
         GroupBox {
             title: "Drawing"
 
-            // Layout.fillWidth: true
-            // Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.fillHeight: true
             // anchors.fill: parent
             // anchors.centerIn: parent
-            height: parent.height / 2
-            width: parent.width
+            // height: parent.height / 2
+            // width: parent.width
 
             RobotView {
                 id: robotDrawing
@@ -66,6 +67,14 @@ ApplicationWindow {
                 //  Component.onCompleted: {
                 //     robotDrawing.implicitWidth = contentView.implicitWidth
                 //     robotDrawing.implicitHeight = contentView.implicitHeight
+                // }
+
+                // ValueAxis {
+                //     id: xAxis
+                //     min: 0
+                //     max: 10
+                //     // height: 20
+                //     Layout.fillWidth: true
                 // }
             }
         }
@@ -155,38 +164,50 @@ ApplicationWindow {
             // Layout.fillHeight: true
             // anchors.fill: parent
             // anchors.centerIn: parent
-            height: parent.height / 3
+            // height: parent.height / 3
             // width: parent.width
 
             ColumnLayout {
-                anchors.fill: parent
+                // TODO: dynamic sizing based on number of servos in the view
+                // anchors.fill: parent
 
                 ListView {
+                    Layout.fillWidth: true
+                    // Layout.fillHeight: true
                     id: listView
-                    anchors.fill: parent
+                    // anchors.fill: parent
+                    height: 160
                     model: listModel
                     delegate: RowLayout {
                         Text {
                             text: "Servo " + servoIndex
                             // anchors.centerIn: parent
                         }
-                        ServoSlider {
-                            slider {
-                                minimumValue: 0
-                                maximumValue: 180
-                                value: 0
-                            }
+                        RangeSlider {
+                            id: rangeSlider
+                            from: 0
+                            to: 180
+                            stepSize: 1
+                            first.value: 0
+                            second.value: 180
 
+                            Rectangle {
+
+                            }
+                            Rectangle {
+                                width: 4
+                                height: rangeSlider.height - 10
+                                y: (rangeSlider.height - height) / 2
+                                x: servo1.slider.value / 3.14 * rangeSlider.width
+
+                                color: 'black'
+
+                            }
                         }
 
-                        ServoSlider {
-                            slider {
-                                minimumValue: 0
-                                maximumValue: 180
-                                value: 180
-                            }
+                        Text {
+                            text: "[" + Math.round(rangeSlider.first.value) + ", " + Math.round(rangeSlider.second.value) + "]"
                         }
-
                     }
                 }
 
@@ -194,18 +215,18 @@ ApplicationWindow {
                     id: listModel
                     objectName: "servoLimitsModel"
 
-                    // Component.onCompleted: {
-                    //     for (var i = 0; i < 4; i++) {
-                    //         append(createListElement(i));
-                    //     }
-                    // }
+                    Component.onCompleted: {
+                        for (var i = 0; i < 4; i++) {
+                            append(createListElement(i));
+                        }
+                    }
 
-                    // function createListElement(i) {
-                    //     return {
-                    //         servoIndex: i,
-                    //         value: 3
-                    //     };
-                    // }
+                    function createListElement(i) {
+                        return {
+                            servoIndex: i,
+                            value: 3
+                        };
+                    }
                 }
             }
         }
