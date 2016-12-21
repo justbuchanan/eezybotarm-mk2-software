@@ -35,7 +35,10 @@ if __name__ == "__main__":
 
     engine.load('main.qml')
 
-    win = engine.rootObjects()[0]
+    try:
+        win = engine.rootObjects()[0]
+    except IndexError:
+        exit(1)
 
     # def myHandler():
     #     print('handler called')
