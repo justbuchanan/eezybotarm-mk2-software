@@ -18,11 +18,11 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QThread
 
 import argparse
-parser = argparse.ArgumentParser('Control eezybotarm mk2 with a spacenav mouse')
+parser = argparse.ArgumentParser(
+    'Control eezybotarm mk2 with a spacenav mouse')
 parser.add_argument('--dumb', action='store_true', help='dumb controls')
 parser.add_argument('device_path', type=str, default='/dev/arduino')
 args = parser.parse_args()
-
 
 
 # exit gracefully
@@ -30,6 +30,8 @@ def on_signal(signum, frame):
     print('Ctrl+C received, exiting...')
     spnav_close()
     sys.exit(0)
+
+
 signal.signal(signal.SIGINT, on_signal)
 
 
@@ -52,6 +54,7 @@ grip_pos = np.array([-0.1, 0.05])
 
 app = QApplication(sys.argv)
 arm = Arm(args.device_path, 9600, update_freq=30)
+
 
 class SpnavController(QThread):
     def run(self):
@@ -80,21 +83,23 @@ class SpnavController(QThread):
                 print("cmd: ", end='')
                 print(state)
 
-
             if event and event.ev_type == SPNAV_EVENT_MOTION:
                 t, r = event.translation, event.rotation
                 print(t)
-                state[0] = calibration.calc_base_servo_cmd(-r[1] / 350.0 * pi/4)
+                state[0] = calibration.calc_base_servo_cmd(
+                    -r[1] / 350.0 * pi / 4)
                 state[1] = 110 - t[2] / 350.0 * 90
                 state[2] = 100 + t[1] / 350.0 * 90
 
-                grip_pos = np.array([-0.1, 0.05]) + np.array([-t[2] / 350.0 * .1, t[1] / 350.0 * .1])
+                grip_pos = np.array([-0.1, 0.05]) + np.array(
+                    [-t[2] / 350.0 * .1, t[1] / 350.0 * .1])
 
                 recalculate()
 
             if event and event.ev_type == SPNAV_EVENT_BUTTON:
                 closed = event.bnum == 0 and event.press
                 recalculate()
+
 
 ctl = SpnavController()
 ctl.start()

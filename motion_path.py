@@ -16,7 +16,7 @@ def path_from_waypoints(waypoints, steps_per_m=5000):
 
     for i in range(len(waypoints) - 1):
         a = waypoints[i]
-        b = waypoints[i+1]
+        b = waypoints[i + 1]
         # print('segment\n-----------------------------')
         # print('%s -> %s' % (str(a), str(b)))
 
@@ -27,7 +27,8 @@ def path_from_waypoints(waypoints, steps_per_m=5000):
             continue
         direc = delta / dist
 
-        stepcount = np.matmul(abs(delta), np.array([0.3, 1.0, 1.3]) * steps_per_m)
+        stepcount = np.matmul(
+            abs(delta), np.array([0.3, 1.0, 1.3]) * steps_per_m)
         # print('stepcount: %d' % stepcount)
         dist_vals = np.linspace(0, dist, num=stepcount)
 
@@ -35,8 +36,6 @@ def path_from_waypoints(waypoints, steps_per_m=5000):
         path += segment
 
     return path
-
-
 
 
 def plot_path(path):
@@ -62,6 +61,7 @@ def plot_path(path):
 
     plt.subplot(3, 1, 3)
     servos = [endpoint_state_to_servos(p) for p in path]
+
     def plot_servos(servos):
         plt.title('Servo values')
         ii = list(range(len(servos)))
@@ -73,7 +73,6 @@ def plot_path(path):
     plot_servos(servos)
 
     plt.show()
-
 
 
 # @param p (base_angle, grip_x, grip_y)
@@ -108,19 +107,18 @@ def run_waypoints(arm, waypoints, speed):
         time.sleep(dt)
 
 
-
 if __name__ == '__main__':
     waypoints = [
         np.array([0, 00, 0.05]),
-        np.array([pi/6, -0.09, -0.03]),
-        np.array([pi/12, -0.1, -0.03]),
+        np.array([pi / 6, -0.09, -0.03]),
+        np.array([pi / 12, -0.1, -0.03]),
         np.array([0, -0.06, 0.16]),
         # np.array([0, -0.06, 0.16]),
         # np.array([-pi/6, -0.15, 0.0]),
-        np.array([-pi/12, -0.1, -0.03]),
-        np.array([-pi/6, -0.09, -0.03]),
-        np.array([-pi/6, -0.09, -0.06]),
-        np.array([-pi/6, -0.09, -0.03]),
+        np.array([-pi / 12, -0.1, -0.03]),
+        np.array([-pi / 6, -0.09, -0.03]),
+        np.array([-pi / 6, -0.09, -0.06]),
+        np.array([-pi / 6, -0.09, -0.03]),
     ]
 
     arm = Arm()

@@ -6,6 +6,7 @@ import arm_model
 import numpy as np
 from math import *
 
+
 class RobotView(QQuickPaintedItem):
     def __init__(self, parent):
         QObject.__init__(self, parent)
@@ -16,6 +17,7 @@ class RobotView(QQuickPaintedItem):
     @pyqtProperty(ArmConfig)
     def config(self):
         return self._config
+
     @config.setter
     def config(self, value):
         self._config = value
@@ -56,9 +58,7 @@ class RobotView(QQuickPaintedItem):
                 if pts:
                     g = pts[4]
                     r = 0.002
-                    painter.drawEllipse(QPointF(g[0], g[1]), r,r)
-
-
+                    painter.drawEllipse(QPointF(g[0], g[1]), r, r)
 
         painter.save()
         painter.setPen(QPen(QColor('blue'), 0.01))
@@ -76,5 +76,3 @@ class RobotView(QQuickPaintedItem):
         for p in pts:
             rad = 0.01
             painter.drawEllipse(p, rad, rad)
-
-

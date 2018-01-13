@@ -3,13 +3,12 @@ import time
 from PyQt5.QtCore import QTimer
 import arm_model
 
-
 # command delimiter for the serial communication to arduino
 SERIAL_MSG_DELIMITER = 200
 
 
-
-class ConnectionError(RuntimeError): pass
+class ConnectionError(RuntimeError):
+    pass
 
 
 class Arm:
@@ -19,7 +18,7 @@ class Arm:
         except serial.SerialException as e:
             raise ConnectionError(e)
 
-        time.sleep(0.01) # TODO: is this needed?
+        time.sleep(0.01)  # TODO: is this needed?
 
         self._encoded_msg = None
         self._update_freq = update_freq
@@ -35,7 +34,8 @@ class Arm:
     def set_servo_values(self, servos):
         if len(servos) != arm_model.NUM_SERVOS:
             raise RuntimeError("Invalid number of servos")
-        self._encoded_msg = [SERIAL_MSG_DELIMITER] + list([chr(c) for c in  servos])
+        self._encoded_msg = [SERIAL_MSG_DELIMITER] + list(
+            [chr(c) for c in servos])
 
     def send_message(self):
         if self._encoded_msg:

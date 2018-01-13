@@ -8,6 +8,7 @@ import calibration
 
 import arm_model
 
+
 class ArmConfig(QObject):
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
@@ -16,6 +17,7 @@ class ArmConfig(QObject):
     @pyqtProperty(list)
     def points(self):
         return self._points
+
     @points.setter
     def points(self, value):
         self._points = value
@@ -29,6 +31,7 @@ class ArmCommand(QObject):
     @pyqtProperty(list)
     def servos(self):
         return self._servos
+
     @servos.setter
     def servos(self, value):
         self._servos = value
@@ -47,6 +50,7 @@ class ArmDriver(QObject):
     @pyqtProperty(bool, notify=connected_changed)
     def connected(self):
         return self._connected
+
     @connected.setter
     def connected(self, value):
         if value != self._connected:
@@ -68,6 +72,7 @@ class ArmDriver(QObject):
     @pyqtProperty(ArmCommand)
     def command(self):
         return self._command
+
     @command.setter
     def command(self, value):
         self._command = value
@@ -90,8 +95,8 @@ class ArmModel(QObject):
     def __init__(self, parent):
         QObject.__init__(self, parent)
         self._servo0 = 0
-        self._servo1 = pi/2
-        self._servo2 = pi/4
+        self._servo1 = pi / 2
+        self._servo2 = pi / 4
         self._config = None
         self._command = None
         self._gripper_closed = False
@@ -109,9 +114,9 @@ class ArmModel(QObject):
         base = calibration.calc_base_servo_cmd(self.servo0)
         servos = [base, arm_servos[0], arm_servos[1]]
         # TODO: share this code with motion_path.py
-        
+
         # TODO: move gripper values elsewhere
-        servos.append(50 if self.gripper_closed else 180) # gripper servo
+        servos.append(50 if self.gripper_closed else 180)  # gripper servo
 
         servos = calibration.limit_servos(servos)
         servos = [int(s) for s in servos]
@@ -121,6 +126,7 @@ class ArmModel(QObject):
     @pyqtProperty(float)
     def servo0(self):
         return self._servo0
+
     @servo0.setter
     def servo0(self, value):
         self._servo0 = value
@@ -129,6 +135,7 @@ class ArmModel(QObject):
     @pyqtProperty(float)
     def servo1(self):
         return self._servo1
+
     @servo1.setter
     def servo1(self, value):
         self._servo1 = value
@@ -137,6 +144,7 @@ class ArmModel(QObject):
     @pyqtProperty(float)
     def servo2(self):
         return self._servo2
+
     @servo2.setter
     def servo2(self, value):
         self._servo2 = value
@@ -145,6 +153,7 @@ class ArmModel(QObject):
     @pyqtProperty(bool)
     def gripper_closed(self):
         return self._gripper_closed
+
     @gripper_closed.setter
     def gripper_closed(self, value):
         self._gripper_closed = value
@@ -153,18 +162,19 @@ class ArmModel(QObject):
     @pyqtProperty(ArmConfig, notify=config_changed)
     def config(self):
         return self._config
+
     @config.setter
     def config(self, value):
         self._config = value
 
         self.config_changed.emit(value)
 
-
     command_changed = pyqtSignal(ArmCommand)
 
     @pyqtProperty(ArmCommand, notify=command_changed)
     def command(self):
         return self._command
+
     @command.setter
     def command(self, value):
         self._command = value

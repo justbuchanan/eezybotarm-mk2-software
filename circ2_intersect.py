@@ -7,6 +7,7 @@ from sympy import Symbol
 from sympy.geometry import *
 from math import *
 
+
 # borrowed from: https://gist.github.com/xaedes/974535e71009fa8f090e
 def circ2_intersect_github(p0, r0, p1, r1):
     '''
@@ -16,28 +17,30 @@ def circ2_intersect_github(p0, r0, p1, r1):
     @result: tuple of intersection points (which are (x,y) tuple)
     '''
     # http://stackoverflow.com/a/3349134/798588
-    dx,dy = p1[0]-p0[0],p1[1]-p0[1]
-    d = sqrt(dx*dx+dy*dy)
-    if d > r0+r1:
+    dx, dy = p1[0] - p0[0], p1[1] - p0[1]
+    d = sqrt(dx * dx + dy * dy)
+    if d > r0 + r1:
         # print "#1"
-        return None # no solutions, the circles are separate
-    if d < abs(r0-r1):
+        return None  # no solutions, the circles are separate
+    if d < abs(r0 - r1):
         # print "#2"
-        return None # no solutions because one circle is contained within the other
+        return None  # no solutions because one circle is contained within the other
     if d == 0 and r0 == r1:
         # print "#3"
-        return [] # circles are coincident and there are an infinite number of solutions
+        return [
+        ]  # circles are coincident and there are an infinite number of solutions
 
-    a = (r0*r0-r1*r1+d*d)/(2*d)
-    h = sqrt(r0*r0-a*a)
-    xm = p0[0] + a*dx/d
-    ym = p0[1] + a*dy/d
-    xs1 = xm + h*dy/d
-    xs2 = xm - h*dy/d
-    ys1 = ym - h*dx/d
-    ys2 = ym + h*dx/d
+    a = (r0 * r0 - r1 * r1 + d * d) / (2 * d)
+    h = sqrt(r0 * r0 - a * a)
+    xm = p0[0] + a * dx / d
+    ym = p0[1] + a * dy / d
+    xs1 = xm + h * dy / d
+    xs2 = xm - h * dy / d
+    ys1 = ym - h * dx / d
+    ys2 = ym + h * dx / d
 
-    return np.array([xs1,ys1]),np.array([xs2,ys2])
+    return np.array([xs1, ys1]), np.array([xs2, ys2])
+
 
 # get the intersection points of two circles
 # tiny wrapper over sympy geometry

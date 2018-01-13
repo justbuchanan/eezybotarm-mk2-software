@@ -3,9 +3,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
-
 import matplotlib.pyplot as plt
 import time
 import threading
@@ -13,11 +10,13 @@ import random
 
 data = []
 
+
 # This just simulates reading from a socket.
 def data_listener():
     while True:
         time.sleep(1)
         data.append(random.random())
+
 
 if __name__ == '__main__':
     thread = threading.Thread(target=data_listener)
@@ -25,7 +24,7 @@ if __name__ == '__main__':
     thread.start()
     #
     # initialize figure
-    plt.figure() 
+    plt.figure()
     ln, = plt.plot([])
     plt.ion()
     plt.show()
@@ -35,12 +34,6 @@ if __name__ == '__main__':
         ln.set_ydata(data)
         plt.draw()
     exit()
-
-
-
-
-
-
 
 plt.axis([0, 10, 0, 1])
 plt.ion()
@@ -56,5 +49,5 @@ plt.gca().add_line(line)
 
 while True:
     y = np.random.random()
-    plt.scatter(y, 1/y)
+    plt.scatter(y, 1 / y)
     plt.pause(0.05)

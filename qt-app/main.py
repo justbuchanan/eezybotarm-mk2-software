@@ -16,8 +16,6 @@ from calibration import *
 
 import arm_model
 
-
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
