@@ -33,3 +33,9 @@ PYTHONPATH=../ python main.py
 ```
 
 ![Screenshot](doc/screenshot.png)
+
+The arm can be moved in 3 ways:
+
+* Drag the sliders that represent the three servo positions
+* Use vim commands: h, j, k, l
+* SpaceNavigator 3d mouse
