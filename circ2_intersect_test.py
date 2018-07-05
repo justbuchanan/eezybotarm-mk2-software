@@ -11,7 +11,8 @@ class TestCirc2Intersect(unittest.TestCase):
             np.array([0, 0]),
             0.7,
             np.array([0, 1]),
-            0.7, )
+            0.7,
+        )
 
         self.assertEqual(2, len(intersections))
 
@@ -20,7 +21,8 @@ class TestCirc2Intersect(unittest.TestCase):
             np.array([0, 0]),
             .1,
             np.array([10, 10]),
-            .1, )
+            .1,
+        )
 
         self.assertEqual(None, intersections)
 
@@ -29,7 +31,8 @@ class TestCirc2Intersect(unittest.TestCase):
             np.array([0, 0]),
             1,
             np.array([0, 2]),
-            1, )
+            1,
+        )
 
         self.assertEqual(2, len(intersections))
         self.assertItemsEqual(intersections[0], intersections[1])

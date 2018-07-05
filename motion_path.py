@@ -28,7 +28,8 @@ def path_from_waypoints(waypoints, steps_per_m=5000):
         direc = delta / dist
 
         stepcount = np.matmul(
-            abs(delta), np.array([0.3, 1.0, 1.3]) * steps_per_m)
+            abs(delta),
+            np.array([0.3, 1.0, 1.3]) * steps_per_m)
         # print('stepcount: %d' % stepcount)
         dist_vals = np.linspace(0, dist, num=stepcount)
 
