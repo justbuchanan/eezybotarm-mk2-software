@@ -4,8 +4,8 @@ Collection of software for the [EEZYbotARM MK2](http://www.thingiverse.com/thing
 
 This project contains two main programs:
 
-* An arduino program that listens for commands over the serial connection and moves the servos. See the code in the arduino/ directory and instructions in the makefile. You will need to compile this program and flash it to your eezybotarm's arduino.
-* A qt-based gui application that sends commands to the arm over a serial (usb) connection.
+* An [arduino](https://www.arduino.cc/) program that listens for commands over the serial connection and controls servo movement. See the code in the `arduino` directory and instructions in the makefile for details. You will need to compile this program and flash it to your eezybotarm's arduino.
+* A gui application built with Qt that sends commands to the arm over a serial (usb) connection.
 
 ## Install dependencies
 
@@ -37,5 +37,5 @@ PYTHONPATH=../ python main.py
 The arm can be moved in 3 ways:
 
 * Drag the sliders that represent the three servo positions
-* Use vim commands: h, j, k, l
+* Vim-like keyboard shortcuts: h, j, k, l
 * SpaceNavigator 3d mouse
