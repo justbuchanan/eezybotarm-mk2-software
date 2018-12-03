@@ -1,5 +1,0 @@
-{
-    "fqbn": "archlinux-arduino:avr:uno",
-    "hardwareFolders": "/usr/share/arduino/hardware",
-    "toolsFolders": "/usr/bin"
-}

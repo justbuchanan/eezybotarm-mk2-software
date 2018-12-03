@@ -1,58 +1,82 @@
-// #include <Servo.h>
+struct MotorConn {
+    int stepPin;
+    int dirPin;
+};
+
+MotorConn conns[] = {
+    {7, 6}, // base
+    {5, 4}, // up/down
+    {3, 2}, //forward/back
+};
+
+const int kBaseIdx = 0;
+const int kVertIdx = 1;
+const int kForwardbackIdx = 2;
 
 void setup() {
     Serial.begin(9600);
 
     pinMode(LED_BUILTIN, OUTPUT);
+
+    for (MotorConn& c : conns) {
+        pinMode(c.dirPin, OUTPUT);
+        pinMode(c.stepPin, OUTPUT);
+    }
+}
+
+const int delayUs = 500;
+const int stepIncrement = 20; // # of steps per instruction
+
+void step(int pin) {
+    for (int i = 0; i < stepIncrement; i++) {
+        digitalWrite(pin, HIGH);
+        delayMicroseconds(delayUs);
+        digitalWrite(pin, LOW);
+        delayMicroseconds(delayUs);
+    }
+}
+
+void setDir(int pin, bool forward) {
+    digitalWrite(pin, forward ? HIGH : LOW);
+    delayMicroseconds(delayUs);
 }
 
 void loop() {
     static bool ledOn = false;
+    static bool forward = true;
 
     // read values from serial into the servoValues buffer
     if (Serial.available() > 0) {
-        uint8_t c = Serial.read();
-        if (c == 'j') {
-            ledOn = !ledOn;
-
-            // TODO: step forward
-        } else if (c == 'k') {
-            ledOn = !ledOn;
-
-            // TODO: step backward
+        ledOn = !ledOn;
+        uint8_t cmd = Serial.read();
+        if (cmd == 'j') {
+            MotorConn& c = conns[kVertIdx];
+            setDir(c.dirPin, true); // down
+            step(c.stepPin);
+            Serial.write('j');
+        } else if (cmd == 'k') {
+            MotorConn& c = conns[kVertIdx];
+            setDir(c.dirPin, false); // up
+            step(c.stepPin);
+            Serial.write('k');
+        } else if (cmd == 'h') {
+            MotorConn& c = conns[kBaseIdx];
+            setDir(c.dirPin, true); // left?
+            step(c.stepPin);
+        } else if (cmd == 'l') {
+            MotorConn& c = conns[kBaseIdx];
+            setDir(c.dirPin, false); // right?
+            step(c.stepPin);
+        } else if (cmd == 'g') {
+            MotorConn& c = conns[kForwardbackIdx];
+            setDir(c.dirPin, true); // out?
+            step(c.stepPin);
+        } else if (cmd == 'G') {
+            MotorConn& c = conns[kForwardbackIdx];
+            setDir(c.dirPin, false); // in?
+            step(c.stepPin);
         }
     }
 
     digitalWrite(LED_BUILTIN, ledOn ? HIGH : LOW);
 }
-
-// void loop() {
-//     static bool ledOn = false;
-//     static uint8_t servoIndex = 0;
-//     static unsigned long lastMsgTime = 0;
-
-//     // read values from serial into the servoValues buffer
-//     if (Serial.available() > 0) {
-//         uint8_t c = Serial.read();
-//         if (c == MSG_DELIMITER) {
-//             ledOn = !ledOn; // toggle led
-//             lastMsgTime = millis();
-//             servoIndex = 0;
-//         } else if (servoIndex < NUM_SERVOS) {
-//             servos[servoIndex].attach(SERVO_PINS[servoIndex]);
-//             servos[servoIndex].write(c);
-//             servoIndex += 1;
-//         }
-//     }
-
-//     // disable servos if we haven't received a command in a while
-//     if (millis() - lastMsgTime > CMD_TIMEOUT) {
-//         for (Servo& s : servos) {
-//             s.detach();
-//         }
-
-//         ledOn = false;
-//     }
-
-//     digitalWrite(LED_BUILTIN, ledOn ? HIGH : LOW);
-// }
