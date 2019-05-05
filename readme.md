@@ -12,7 +12,7 @@ This project contains two main programs:
 Download this repo, then install the required python packages:
 
 ```
-pip -r requirements.txt
+pip install -r requirements.txt
 ```
 
 You'll also need [arduino-mk](https://github.com/sudar/Arduino-Makefile) in order to build the firmware
